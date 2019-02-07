@@ -14,7 +14,12 @@
 (warn "(setup-hrp2-line-environment)~%")
 
 (defun sample-hrp2-reach-ik-line
-  ()
+  (&key
+   (pre-process-func)
+   (post-process-func)
+   &allow-other-keys
+   )
+  (setup-hrp2-line-environment)
   (setq *edge* (elt (send *pipe* :edges) 15))
   (send *edge* :put :margin 20) ;; [mm]
   (send *edge* :put :direction-move-target-axis :z)
@@ -22,6 +27,8 @@
         *edge*
         :move-target (send *robot* :rarm :end-coords)
         :debug-view t
+        :pre-process-func pre-process-func
+        :post-process-func post-process-func
         )
   )
 (warn "(sample-hrp2-reach-ik-line)~%")
@@ -39,15 +46,22 @@
 (warn "(setup-hrp2-face-environment)~%")
 
 (defun sample-hrp2-reach-ik-face
-  ()
+  (&key
+   (pre-process-func)
+   (post-process-func)
+   &allow-other-keys
+   )
+  (setup-hrp2-face-environment)
   (setq *face* (elt (send *board* :faces) 1))
   (send *face* :put :margin 20) ;; [mm]
-  (send *face* :put :normal-move-target-axis :z)
+  (send *face* :put :normal-move-target-axis :-x)
   (send *face* :put :normal-tolerance 10.0) ;; [deg]
   (send *robot* :inverse-kinematics-optmotiongen
         *face*
         :move-target (send *robot* :rarm :end-coords)
         :debug-view t
+        :pre-process-func pre-process-func
+        :post-process-func post-process-func
         )
   )
 (warn "(sample-hrp2-reach-ik-face)~%")
